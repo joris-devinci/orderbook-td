@@ -5,6 +5,8 @@
 // The fastest implementation wins!
 // Target: Sub-nanosecond operations where possible
 
+use std::cmp::Ordering;
+
 /// Price is represented as an integer where 1 unit = 10^-4
 /// Example: 12345 represents a price of 1.2345
 pub type Price = i64;
@@ -19,16 +21,30 @@ pub enum Side {
     Ask,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Item {
+    pub price: Price,
+    pub quantity: Quantity,
+}
+
+impl PartialOrd for Item {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Item {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.price.cmp(&other.price)
+    }
+}
+
 /// Order book update operation
 #[derive(Debug, Clone)]
 pub enum Update {
     /// Add or update a price level (price, quantity, side)
     /// If quantity is 0, this level should be removed
-    Set {
-        price: Price,
-        quantity: Quantity,
-        side: Side,
-    },
+    Set { price: Price, quantity: Quantity, side: Side },
 
     /// Remove a price level completely
     Remove { price: Price, side: Side },

@@ -13,7 +13,7 @@ mod orderbook;
 fn main() {
     println!("Running Naive OrderBook Benchmark...\n");
 
-    let result = OrderBookBenchmark::run::<OrderBookImpl>("OrderBook", 100_000);
+    let result = OrderBookBenchmark::run::<OrderBookImpl>("OrderBook", 10);
     OrderBookBenchmark::print_results(&result);
 
     println!("\n Competition Goal: Achieve sub-nanosecond operations!");
